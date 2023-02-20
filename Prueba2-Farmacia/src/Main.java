@@ -2,7 +2,7 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-            JFrame frame=new JFrame("FARMACIA");
+        JFrame frame=new JFrame("FARMACIA");
         frame.setContentPane(new Farmacia().Panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

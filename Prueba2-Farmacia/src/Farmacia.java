@@ -17,13 +17,8 @@ public class Farmacia {
     private JComboBox cbVENCIDA;
 
     public Farmacia() {
-        /*
-        textNOMBRE.setEnabled(false);
-        textCELULAR.setEnabled(false);
-        textEMAIL.setEnabled(false);
-        actualizar.setEnabled(false);
-         */
-
+        JFormattedTextField cantidad = new JFormattedTextField();
+        JFormattedTextField vencido = new JFormattedTextField();
         buscar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -35,21 +30,38 @@ public class Farmacia {
                             "jdbc:mysql://localhost:3306/farmacia", "root", "3001a"
                     );
                     Statement s = conexion.createStatement();
-                    String id = textID.getText();
-                    ResultSet rs = s.executeQuery("SELECT * FROM productos WHERE id =" + id);
 
+                    ResultSet rs = s.executeQuery("SELECT * FROM productos ");
+
+                    cbCANTIDAD.removeAllItems();
+                    cbVENCIDA.removeAllItems();
+                    cbCANTIDAD.addItem(" ");
+                    cbVENCIDA.addItem(" ");
                     while (rs.next()) {
-                        if (textID.getText().equals(rs.getString(1))) {
-                            textNOMBRE.setText(rs.getString(2));
-                            textDESCRIPCION.setText(rs.getString(3));
                             cbCANTIDAD.addItem(rs.getString(4));
                             cbVENCIDA.addItem(rs.getString(5));
+                    }
+
+                    String id = textID.getText();
+                    ResultSet r = s.executeQuery("SELECT * FROM productos WHERE id =" + id);
+
+
+
+                    while (r.next()) {
+                        if (textID.getText().equals(r.getString(1))) {
+                            textNOMBRE.setText(r.getString(2));
+                            textDESCRIPCION.setText(r.getString(3));
+                            cantidad.setText(r.getString(4));
+                            vencido.setText(r.getString(5));
+                            cbCANTIDAD.setSelectedItem(cantidad.getText());
+                            cbVENCIDA.setSelectedItem(vencido.getText());
                         } else {
                             JOptionPane.showMessageDialog(null, "DATOS NO ENCONTRADOS");
                         }
                     }
                     conexion.close();
                     rs.close();
+                    r.close();
                     s.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -74,12 +86,16 @@ public class Farmacia {
                     Connection conexion = DriverManager.getConnection(
                             "jdbc:mysql://localhost:3306/farmacia", "root", "3001a"
                     );
-                    ps = conexion.prepareStatement("Insert into productos values = (?,?,?,?,?)");
+                    ps = conexion.prepareStatement("Insert into productos values (?,?,?,?,?)");
                     ps.setString(1, textID.getText());
                     ps.setString(2, textNOMBRE.getText());
                     ps.setString(3, textDESCRIPCION.getText());
-                    ps.setString(4, cbCANTIDAD.getName());
-                    ps.setString(5, cbVENCIDA.getName());
+                    cantidad.setText((String)cbCANTIDAD.getSelectedItem());
+                    vencido.setText((String)cbVENCIDA.getSelectedItem());
+                    ps.setString(4, cantidad.getText());
+                    ps.setString(5, vencido.getText());
+                    cbCANTIDAD.setSelectedItem(cantidad.getText());
+                    cbVENCIDA.setSelectedItem(vencido.getText());
 
                     int res = ps.executeUpdate();
                     if(res >0){
@@ -110,18 +126,22 @@ public class Farmacia {
             public void actionPerformed(ActionEvent e) {
                 PreparedStatement ps;
                 try{
-
                     Class.forName("com.mysql.cj.jdbc.Driver");
 
                     Connection conexion = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/Agencia", "root", "3001a"
+                            "jdbc:mysql://localhost:3306/farmacia", "root", "3001a"
                     );
-                    ps = conexion.prepareStatement("UPDATE Ciudadanos SET id = ?,nombre = ?, celular= ?, emagil =? WHERE id = " + textID.getText());
+                    ps = conexion.prepareStatement("UPDATE productos SET id = ?,nombre = ?, descripcion= ?, cantidad =?, cantidad_vencidad =?  WHERE id = " + textID.getText());
                     ps.setString(1, textID.getText());
                     ps.setString(2, textNOMBRE.getText());
                     ps.setString(3, textDESCRIPCION.getText());
-                    ps.setString(4, cbCANTIDAD.getName());
-                    ps.setString(5, cbVENCIDA.getName());
+
+                    /*cbCANTIDAD.removeItem(cantidad.getText());
+                    cbVENCIDA.removeItem(vencido.getText());*/
+                    cantidad.setText((String)cbCANTIDAD.getSelectedItem());
+                    vencido.setText((String)cbVENCIDA.getSelectedItem());
+                    ps.setString(4, cantidad.getText());
+                    ps.setString(5, vencido.getText());
 
                     int res = ps.executeUpdate();
                     if(res >0){
@@ -150,20 +170,13 @@ public class Farmacia {
                     Class.forName("com.mysql.cj.jdbc.Driver");
 
                     Connection conexion = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/Agencia", "root", "3001a"
+                            "jdbc:mysql://localhost:3306/farmacia", "root", "3001a"
                     );
-                    ps = conexion.prepareStatement("DELETE from productos WHERE id = " + textID.getText());
-                    /*
-                    ps.setString(1, textID.getText());
-                    ps.setString(2, textNOMBRE.getText());
-                    ps.setString(3, textDESCRIPCION.getText());
-                    ps.setString(4, cbCANTIDAD.getSelectedItem())
-                    ps.setString(4, cbVENCIDA.getSelectedItem())
-                    */
+                    ps = conexion.prepareStatement("DELETE from productos WHERE id = " + textID.getText() );
 
                     int res = ps.executeUpdate();
                     if(res >0){
-                        JOptionPane.showMessageDialog(null,"CIUDADANO " + textID.getText() + " ACTUALIZADO");
+                        JOptionPane.showMessageDialog(null,"CIUDADANO " + textID.getText() + " ELIMINADO");
                     }else{
                         JOptionPane.showMessageDialog(null,"NO GUARDADO");
                     }
