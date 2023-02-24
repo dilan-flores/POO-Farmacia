@@ -1,6 +1,9 @@
 # POO-Farmacia
 Sistema CRUD en java. Productos de una Farmacia
 
+
+Video en funcionamiento: https://epnecuador-my.sharepoint.com/:v:/g/personal/dilan_flores_epn_edu_ec/EcEjXaz_w11HhCmi_wKRMysB4Bat9mtGUUasFPyHSYI1lw?e=81yB7Y
+
 # Inicio
 
 ![P2_inicio](https://user-images.githubusercontent.com/117755180/220201648-6ed33757-c3c5-45c1-9857-49ed97478ae8.png)
